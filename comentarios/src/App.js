@@ -1,21 +1,33 @@
 import React, { Component } from 'react';
+import { database } from './firebase'
 
 import Comments from './Comments'
 import NewComment from './NewComment'
 
 class App extends Component {
   state = {
-    comments: [
-      'Comment 1',
-      'Comment 2',
-      'Comment 3',
-      'Comment 4',
-    ]
+    comments: {},
+    isLoading: false,
   }
 
   sendComment = comment => {
-    this.setState({
-      comments: [...this.state.comments, comment],
+    const id = database.ref().child('comments').push().key
+    const comments = {}
+    comments['comments/' + id] = {
+      comment
+    }
+
+    database.ref().update(comments)
+  }
+
+  componentDidMount() {
+    this.setState({ isLoading: true })
+    this.comments = database.ref('comments')
+    this.comments.on('value', snapshot => {
+      this.setState({
+        comments: snapshot.val(),
+        isLoading: false,
+      })
     })
   }
 
@@ -24,6 +36,9 @@ class App extends Component {
       <div>
         <NewComment sendComment={this.sendComment} />
         <Comments comments={this.state.comments} />
+        {this.state.isLoading &&
+          <p>Carregando...</p>
+        }
       </div>
     );
   }

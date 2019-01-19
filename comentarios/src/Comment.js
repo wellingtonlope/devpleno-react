@@ -2,12 +2,24 @@ import React from 'react'
 
 const Comment = ({ comment }) => {
   let description = 'vazio'
-  if (comment && comment.comment) {
-    description = comment.comment
+  let email = 'vazio'
+  if (comment) {
+    if (comment.comment) {
+      description = comment.comment
+    }
+    if (comment.email) {
+      email = comment.email
+    }
   }
 
   return (
-    <div>Comentário: {description}</div>
+    <div className='card mt-2'>
+      <div className='card-body'>
+        {description}
+        <br />
+        <span className='text-muted'>Enviado por: {email}</span>
+      </div>
+    </div>
   )
 }
 

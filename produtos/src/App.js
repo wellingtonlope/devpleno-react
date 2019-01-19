@@ -1,27 +1,40 @@
 import React, { Component } from 'react'
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom'
+
+import Home from './Home'
+import Sobre from './Sobre'
+import Produtos from './Produtos'
 
 class App extends Component {
   render() {
     return (
-      <div>
-        <nav className='navbar navbar-inverse'>
-          <div className='container'>
-            <div className='navbar-header'>
-              <a href='/' className='navbar-brand'>
-                Gerenciador de Produtos
-              </a>
+      <Router>
+        <div>
+          <nav className='navbar navbar-inverse'>
+            <div className='container'>
+              <div className='navbar-header'>
+                <Link to='/' className='navbar-brand'>
+                  Gerenciador de Produtos
+              </Link>
+              </div>
+              <ul className='nav navbar-nav'>
+                <li><Link to='/'>Home</Link></li>
+                <li><Link to='/produtos'>Produtos</Link></li>
+                <li><Link to='/Sobre'>Sobre</Link></li>
+              </ul>
             </div>
-            <ul className='nav navbar-nav'>
-              <li><a href='/'>Home</a></li>
-              <li><a href='/'>Produtos</a></li>
-              <li><a href='/'>Sobre</a></li>
-            </ul>
+          </nav>
+          <div className='container'>
+            <Route exact path='/' component={Home} />
+            <Route exact path='/sobre' component={Sobre} />
+            <Route path='/produtos' component={Produtos} />
           </div>
-        </nav>
-        <div className='container'>
-          <h1>Gerenciador de Produtos</h1>
         </div>
-      </div>
+      </Router>
     )
   }
 }

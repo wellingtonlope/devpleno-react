@@ -5,13 +5,95 @@ import ProdutosHome from './ProdutosHome'
 import Categoria from './Categoria'
 
 class Produtos extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      editingCategoria: ''
+    }
+  }
+
+  componentDidMount() {
+    this.props.loadCategorias()
+  }
+
+  handleNewCategoria = key => {
+    if (key.keyCode === 13) {
+      this.props.createCategoria({
+        categoria: this.refs.categoria.value
+      })
+      this.refs.categoria.value = ''
+    }
+  }
+
+  handleEditCategoria = key => {
+    if (key.keyCode === 13) {
+      this.props.editCategoria({
+        id: this.state.editingCategoria,
+        categoria: this.refs['cat-' + this.state.editingCategoria].value
+      })
+      this.setState({
+        editingCategoria: ''
+      })
+    }
+  }
+
+  editCategoria = categoria => {
+    this.setState({
+      editingCategoria: categoria.id
+    })
+  }
+
+  cancelEditing = () => {
+    this.setState({
+      editingCategoria: ''
+    })
+  }
+
+  renderCategoria = cat =>
+    <li key={cat.id}>
+      {this.state.editingCategoria === cat.id &&
+        <div className='input-group'>
+          <div className='input-group-btn'>
+            <input className='form-control'
+              ref={'cat-' + cat.id}
+              type='text'
+              defaultValue={cat.categoria}
+              onKeyUp={this.handleEditCategoria} />
+            <button className='btn' onClick={this.cancelEditing}>cancel</button>
+          </div>
+        </div>
+      }
+      {this.state.editingCategoria !== cat.id &&
+        <div>
+          <button className='btn btn-small' onClick={() => this.props.removeCategoria(cat)}>
+            <span className='glyphicon glyphicon-remove' />
+          </button>
+          <button className='btn btn-small' onClick={() => this.editCategoria(cat)}>
+            <span className='glyphicon glyphicon-pencil' />
+          </button>
+          <Link to={`/produtos/categoria/${cat.id}`}> {cat.categoria}</Link >
+        </div>
+      }
+    </li>
+
   render() {
-    const { match } = this.props
+    const { match, categorias } = this.props
     return (
       <div className='row'>
         <div className='col-md-2'>
           <h3>Categorias</h3>
-          <Link to='/produtos/categoria/1'>Categoria 1</Link>
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            {categorias.map(this.renderCategoria)}
+          </ul>
+          <div className='well well-sm'>
+            <input
+              type='text'
+              ref='categoria'
+              className='form-control'
+              placeholder='Nova categoria'
+              onKeyUp={this.handleNewCategoria} />
+          </div>
         </div>
         <div className='col-md-10'>
           <h1>Produtos</h1>

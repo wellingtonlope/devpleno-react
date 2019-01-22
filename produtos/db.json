@@ -13,7 +13,7 @@
     {
       "id": 3,
       "produto": "Bolacha",
-      "categoria": 2
+      "categoria": "2"
     }
   ],
   "categorias": [

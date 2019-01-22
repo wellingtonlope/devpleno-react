@@ -14,7 +14,9 @@ class App extends Component {
     super(props)
 
     this.state = {
-      categorias: []
+      categorias: [],
+      categoria: {},
+      produtos: [],
     }
   }
 
@@ -40,6 +42,36 @@ class App extends Component {
   editCategoria = categoria => {
     this.props.api.editCategoria(categoria)
       .then(res => this.loadCategorias())
+  }
+
+  createProduto = produto => {
+    return this.props.api.createProduto(produto)
+  }
+
+  loadProdutos = categoria => {
+    this.props.api.loadProdutos(categoria)
+      .then(res => this.setState({
+        produtos: res.data
+      }))
+  }
+
+  loadCategoria = categoria => {
+    this.props.api.readCategoria(categoria)
+      .then(res => this.setState({
+        categoria: res.data
+      }))
+  }
+
+  removeProduto = produto => {
+    return this.props.api.deleteProduto(produto.id)
+  }
+
+  readProduto = id => {
+    return this.props.api.readProduto(id)
+  }
+
+  editProduto = produto => {
+    return this.props.api.editProduto(produto)
   }
 
   render() {
@@ -69,7 +101,16 @@ class App extends Component {
                 removeCategoria={this.removeCategoria}
                 createCategoria={this.createCategoria}
                 editCategoria={this.editCategoria}
-                categorias={this.state.categorias} />} />
+                categorias={this.state.categorias}
+
+                readProduto={this.readProduto}
+                createProduto={this.createProduto}
+                editProduto={this.editProduto}
+                loadProdutos={this.loadProdutos}
+                loadCategoria={this.loadCategoria}
+                removeProduto={this.removeProduto}
+                produtos={this.state.produtos}
+                categoria={this.state.categoria} />} />
           </div>
         </div>
       </Router>
